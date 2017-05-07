@@ -1,24 +1,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-void creaCampo(int** campo,int r,int c){
+char** creaCampo(char** campo,int r,int c){
 	int i,j;
-	campo=(int**)malloc(r*sizeof(int*));
+	campo=(char**)malloc(r*sizeof(char*));
 	for(i=0;i<r;i++){
-		campo[i]=(int*)malloc(c*sizeof(int));
+		campo[i]=(char*)malloc(c*sizeof(char));
 	}
+	return campo;
 }
 
-void riempiCampo(int** campo,int r, int c){
+char** riempiCampo(char** campo,int r, int c){
 	int i,j;
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
-			campo[i][j]=0;
+			campo[i][j]='0';
 		}
 	}
+	return campo;
 }
 
-void stampaCampo(int** campo,int r,int c){
+void stampaCampo(char** campo,int r,int c){
 	int i,j;
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
@@ -29,25 +31,19 @@ void stampaCampo(int** campo,int r,int c){
 }
 int main(){
 	int scelta=0;
-	int i,j;
-	int** CampoMain;
+	char** CampoMain;
 	printf("***---***CampoMinato***---***\n");
 	printf("Cosa vuoi fare?\n1 - Generare schema tramite input\n2 - Generare schema tramite file\n3 - Uscita\n");
 	scanf("%d",&scelta);
 	if (scelta==1){
 		int R,C;
-		printf("Dammi la dimensione del campo ((R C) > 0)\n");
-		scanf("%d %d",&R, &C);
-		creaCampo(CampoMain,R,C);
-		//riempiCampo(CampoMain,R,C);
-		
-		for(i=0;i<R;i++){
-			for(j=0;j<C;j++){
-				CampoMain[i][j]=0;
-			}
-		}
-		
-		//stampaCampo(CampoMain,R,C);
+		do{
+			printf("Dammi la dimensione del campo ((R C) > 0)\n");
+			scanf("%d %d",&R, &C);
+		}while(R<=0 || C<=0);		
+		CampoMain=creaCampo(CampoMain,R,C);
+		CampoMain=riempiCampo(CampoMain,R,C);
+		stampaCampo(CampoMain,R,C);
 	}
 	return 0;
 }
