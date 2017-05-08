@@ -31,18 +31,88 @@ void aggiungiNumeri(char** campo,int r, int c){
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
 			conta='0';
-			if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
-				for(k=(i-1);k<(i+2);k++){
-					for(kk=(j-1);kk<(j+2);kk++){
-						if(campo[k][kk]==MINA){
-							conta++;
+			if(i==0 && j==0){ /*Gestisco il caso particolare della cella nord-ovest*/
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
+					for(k=0;k<2;k++){
+						for(kk=0;kk<2;kk++){
+							if(campo[k][kk]==MINA){
+								conta++;						
+							}	
 						}
+					}				
+					if(conta!='0'){
+							campo[i][j]=conta;					
+					}
+				}				
+			}
+			else if(i==r-1 && j==c-1){ /*Gestisco il caso particolare della cella sud-est*/
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
+					for(k=r-1;k>r-3;k--){
+						for(kk=c-1;kk>c-3;kk--){
+							if(campo[k][kk]==MINA){
+								conta++;						
+							}	
+						}
+					}				
+					if(conta!='0'){
+							campo[i][j]=conta;					
 					}
 				}
-				if(conta!='0'){
-					campo[i][j]=conta;					
+			}
+			else if(i==0 && j==c-1){ /*Gestisco il caso particolare della cella nord-est*/
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
+					for(k=0;k<2;k++){
+						for(kk=c-1;kk>c-3;kk--){
+							if(campo[k][kk]==MINA){
+								conta++;						
+							}	
+						}
+					}				
+					if(conta!='0'){
+							campo[i][j]=conta;					
+					}
 				}
 			}
+			else if(i==r-1 && j==0){ /*Gestisco il caso particolare della cella sud-ovest*/
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
+					for(k=r-1;k>r-3;k--){
+						for(kk=0;kk<2;kk++){
+							if(campo[k][kk]==MINA){
+								conta++;						
+							}	
+						}
+					}				
+					if(conta!='0'){
+							campo[i][j]=conta;					
+					}
+				}
+			}
+			else if(i==0){
+				int dio=0;
+			}
+			else if(j==0){
+				int dio=0;
+			}
+			else if(i==r-1){
+				int dio=0;
+			}
+			else if(j==c-1){
+				int dio=0;
+			}			
+			else{ /*Gestisco tutti gli altri casi (tutta la parte della matrice senza i bordi)*/
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
+					for(k=(i-1);k<(i+2);k++){
+						for(kk=(j-1);kk<(j+2);kk++){
+							if(campo[k][kk]==MINA){
+								conta++;
+							}
+						}
+					}
+					if(conta!='0'){
+						campo[i][j]=conta;					
+					}
+				}
+			}			
 		}
 	}
 }
@@ -123,9 +193,9 @@ int main(){
 	if (scelta==1){
 		int R,C,mine,X,Y,perso=0;
 		do{
-			printf("Dammi la dimensione del campo ((R C) > 1)\n");
+			printf("Dammi la dimensione del campo ((R C) > 0)\n");
 			scanf("%d %d",&R, &C);
-		}while(R<=1 || C<=1);
+		}while((R<=0 || C<=0)||(R<=1 && C<=1));
 		CampoMain=creaCampo(CampoMain,R,C);
 		CampoHidden=creaCampo(CampoHidden,R,C);
 		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
