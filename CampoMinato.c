@@ -3,6 +3,8 @@
 #include <math.h>
 #define MINA '*'
 #define VUOTO '0'
+#define BANDIERINA '?'
+#define COPERTO 'X'
 
 char** creaCampo(char** campo,int r,int c){
 	int i,j;
@@ -215,17 +217,37 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 }
 
 
-void turnoGiocatore(char** campo, char**campoHidden,int r,int c,int x,int y,int* loose){
-	if(campo[y-1][x-1]==MINA){
-		printf("Hai preso una mina stupido\n");
-		*loose=1;
+void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){
+	if(campoHidden[y-1][x-1]==BANDIERINA){
+		printf("La cella che hai selezionato e MARCATA, devi prima SMARCARLA se vuoi scoprirla!\n");
 	}
 	else{
-		printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
-		campoHidden[y-1][x-1]='O';
-	}
+		if(campo[y-1][x-1]==MINA){
+			printf("Hai preso una mina stupido\n");
+			*loose=1;
+		}
+		else if((campo[y-1][x-1]>='1')&&(campo[y-1][x-1]<='8')){
+			campoHidden[y-1][x-1]=campo[y-1][x-1];
+			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
+		}
+		else{			
+			campoHidden[y-1][x-1]='O';
+			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
+		}
+	}	
 }
 
+
+void marcaCella(char** campoHidden,int x, int y){
+	if(campoHidden[y-1][x-1]!=BANDIERINA){
+		campoHidden[y-1][x-1]=BANDIERINA;
+		printf("Hai MARCATO correttamente la casella in posizione[%d,%d]\n",y,x);
+	}
+	else{
+		campoHidden[y-1][x-1]=COPERTO;
+		printf("Hai SMARCATO correttamente la casella in posizione[%d,%d]\n",y,x);
+	}
+}
 /*--------------------------------------------------------MAIN--------------------------------------*/
 int main(){
 	int scelta=0;
@@ -243,7 +265,7 @@ int main(){
 		CampoMain=creaCampo(CampoMain,R,C);
 		CampoHidden=creaCampo(CampoHidden,R,C);
 		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
-		CampoHidden=riempiCampo(CampoHidden,R,C,'X');
+		CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
 		stampaCampo(CampoMain,R,C);
 		stampaCampo(CampoHidden,R,C);
 		do{
@@ -261,11 +283,18 @@ int main(){
 			if(scelta==1){
 				printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
 				scanf("%d %d",&Y, &X);
-				turnoGiocatore(CampoMain,CampoHidden,R,C,X,Y,&perso);
+				scopriCella(CampoMain,CampoHidden,R,C,X,Y,&perso);
 				if(perso==0){
 					stampaCampo(CampoMain,R,C);
 					stampaCampo(CampoHidden,R,C);
 				}
+			}
+			else if(scelta==2){
+				printf("Dammi le coordinate della cella che intendi marcare, o se gia marcata, smarcare (PRIMA riga POI colonna)\n");
+				scanf("%d %d",&Y, &X);
+				marcaCella(CampoHidden,X,Y);
+				stampaCampo(CampoMain,R,C);
+				stampaCampo(CampoHidden,R,C);
 			}
 		}while(perso==0);
 	}
