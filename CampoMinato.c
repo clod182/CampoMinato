@@ -88,16 +88,60 @@ void aggiungiNumeri(char** campo,int r, int c){
 				}
 			}
 			else if(i==0){
-				int dio=0;
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){ /*Gestisco il caso particolare del lato nord*/
+					for(k=i;k<(i+2);k++){
+						for(kk=(j-1);kk<(j+2);kk++){
+							if(campo[k][kk]==MINA){
+								conta++;
+							}
+						}
+					}
+					if(conta!='0'){
+						campo[i][j]=conta;					
+					}
+				}
 			}
 			else if(j==0){
-				int dio=0;
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){ /*Gestisco il caso particolare del lato ovest*/
+					for(k=i-1;k<(i+2);k++){
+						for(kk=(j);kk<(j+2);kk++){
+							if(campo[k][kk]==MINA){
+								conta++;
+							}
+						}
+					}
+					if(conta!='0'){
+						campo[i][j]=conta;					
+					}
+				}
 			}
 			else if(i==r-1){
-				int dio=0;
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){ /*Gestisco il caso particolare del lato sud*/
+					for(k=r-1;k>r-3;k--){
+						for(kk=(j-1);kk<(j+2);kk++){
+							if(campo[k][kk]==MINA){
+								conta++;
+							}
+						}
+					}
+					if(conta!='0'){
+						campo[i][j]=conta;					
+					}
+				}
 			}
 			else if(j==c-1){
-				int dio=0;
+				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){ /*Gestisco il caso particolare del lato est*/
+					for(k=(i-1);k<(i+2);k++){
+						for(kk=c-1;kk>c-3;kk--){
+							if(campo[k][kk]==MINA){
+								conta++;
+							}
+						}
+					}
+					if(conta!='0'){
+						campo[i][j]=conta;					
+					}
+				}
 			}			
 			else{ /*Gestisco tutti gli altri casi (tutta la parte della matrice senza i bordi)*/
 				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
