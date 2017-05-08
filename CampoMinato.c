@@ -20,7 +20,7 @@ char** riempiCampo(char** campo,int r, int c, char carattere){
 		for(j=0;j<c;j++){
 			campo[i][j]=carattere;
 		}
-	}	
+	}
 	return campo;
 }
 
@@ -32,21 +32,19 @@ void aggiungiNumeri(char** campo,int r, int c){
 		for(j=0;j<c;j++){
 			conta='0';
 			if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
-				/*for(k=(i-1);k<(i+2);k++){
+				for(k=(i-1);k<(i+2);k++){
 					for(kk=(j-1);kk<(j+2);kk++){
 						if(campo[k][kk]==MINA){
 							conta++;
 						}
 					}
-				}*/
-				conta++;
+				}
 				if(conta!='0'){
-					//campo[i][j]=conta;
-					campo[0][0]=conta;
+					campo[i][j]=conta;					
 				}
 			}
 		}
-	}	
+	}
 }
 
 
@@ -65,7 +63,7 @@ void stampaCampo(char** campo,int r,int c){
 	printf("\n");
 	for(j=0;j<c;j++){
 		printf("-  ",j+1);
-	}	
+	}
 	printf("\n\n");
     for(i=0;i<r;i++){
         for(j=0;j<c;j++){
@@ -87,9 +85,9 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 			if(campo[ran1][ran2]!='*'){
 				campo[ran1][ran2]='*';
 				contm++;
-			}							
+			}
 		}
-	}*/	
+	}*/
 	contm=0;
 	while(contm<m){
 		ran1=rand()%(r);
@@ -97,7 +95,7 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 		if(campo[ran1][ran2]!=MINA){
 			campo[ran1][ran2]=MINA;
 			contm++;
-		}		
+		}
 	}
 	//return campo;
 }
@@ -125,13 +123,13 @@ int main(){
 	if (scelta==1){
 		int R,C,mine,X,Y,perso=0;
 		do{
-			printf("Dammi la dimensione del campo ((R C) > 0)\n");
+			printf("Dammi la dimensione del campo ((R C) > 1)\n");
 			scanf("%d %d",&R, &C);
-		}while(R<=0 || C<=0);		
+		}while(R<=1 || C<=1);
 		CampoMain=creaCampo(CampoMain,R,C);
 		CampoHidden=creaCampo(CampoHidden,R,C);
 		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
-		CampoHidden=riempiCampo(CampoHidden,R,C,'X');				
+		CampoHidden=riempiCampo(CampoHidden,R,C,'X');
 		stampaCampo(CampoMain,R,C);
 		stampaCampo(CampoHidden,R,C);
 		do{
@@ -153,7 +151,7 @@ int main(){
 				if(perso==0){
 					stampaCampo(CampoMain,R,C);
 					stampaCampo(CampoHidden,R,C);
-				}				
+				}
 			}
 		}while(perso==0);
 	}
