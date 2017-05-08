@@ -5,6 +5,8 @@
 #define VUOTO '0'
 #define BANDIERINA '?'
 #define COPERTO 'X'
+#define SCOPERTO 'O'
+#define LINEAOUT "----->>>>>"
 
 char** creaCampo(char** campo,int r,int c){
 	int i,j;
@@ -221,6 +223,9 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 	if(campoHidden[y-1][x-1]==BANDIERINA){
 		printf("La cella che hai selezionato e MARCATA, devi prima SMARCARLA se vuoi scoprirla!\n");
 	}
+	else if((campoHidden[y-1][x-1]>='1' && campoHidden[y-1][x-1]<='8')||campoHidden[y-1][x-1]==SCOPERTO){
+		printf("La cella che hai selezionato e gia scoperta ;)\n");
+	}
 	else{
 		if(campo[y-1][x-1]==MINA){
 			printf("Hai preso una mina stupido\n");
@@ -231,7 +236,7 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
 		else{			
-			campoHidden[y-1][x-1]='O';
+			campoHidden[y-1][x-1]=SCOPERTO;
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
 	}	
@@ -239,13 +244,16 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 
 
 void marcaCella(char** campoHidden,int x, int y){
-	if(campoHidden[y-1][x-1]!=BANDIERINA){
+	if(campoHidden[y-1][x-1]==COPERTO){
 		campoHidden[y-1][x-1]=BANDIERINA;
 		printf("Hai MARCATO correttamente la casella in posizione[%d,%d]\n",y,x);
 	}
-	else{
+	else if(campoHidden[y-1][x-1]==BANDIERINA){
 		campoHidden[y-1][x-1]=COPERTO;
 		printf("Hai SMARCATO correttamente la casella in posizione[%d,%d]\n",y,x);
+	}
+	else{
+		printf("La casella che hai selezionato e gia scoperta, non puoi marcarla!\n");
 	}
 }
 /*--------------------------------------------------------MAIN--------------------------------------*/
