@@ -219,26 +219,6 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 }
 
 
-void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){
-	if(x>=0 && y>=0 && x<=c && y<=r){		
-		//printf("************************************************************************SONO IN\n");	
-		if(campo[y][x]!=VUOTO){//&&(campoHidden[y][x]!=SCOPERTO){
-			campoHidden[y][x]=campo[y][x];
-		}		
-		else{
-			campoHidden[y][x]=SCOPERTO;
-			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
-			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
-			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);
-			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
-		}
-	}	
-}
-
 void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){
 	if(campoHidden[y-1][x-1]==BANDIERINA){
 		printf("La cella che hai selezionato e MARCATA, devi prima SMARCARLA se vuoi scoprirla!\n");
@@ -278,6 +258,82 @@ void marcaCella(char** campoHidden,int x, int y){
 	}
 }
 
+
+void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){
+	if(x>=0 && y>=0 && x<=c && y<=r){		
+		//printf("************************************************************************SONO IN\n");	
+		if(campo[y][x]!=VUOTO){//&&(campoHidden[y][x]!=SCOPERTO){
+			campoHidden[y][x]=campo[y][x];
+		}
+		else if(x==0 && y==0){/*Cella nord ovest*/
+			campoHidden[y][x]=SCOPERTO;			
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);			
+		}
+		else if(x==0 && y==r){/*Cella sud ovest*/
+			campoHidden[y][x]=SCOPERTO;				
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);					
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
+		}
+		else if(x==c && y==0){/*Cella nord est*/
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);			
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);			
+		}
+		else if(x==0){/*Lato ovest*/
+			campoHidden[y][x]=SCOPERTO;			
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);			
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
+		}
+		else if(y==0){/*Lato nord*/
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);			
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);		
+		}
+		else if(x==c && y==r){/*Cella sud est*/
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);	
+		}
+		else if(x==c){/*Lato est*/
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);					
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);			
+		}
+		else if(y==r){/*Lato sud*/
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);			
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
+		}
+		else{
+			campoHidden[y][x]=SCOPERTO;
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
+		}
+	}	
+}
 /*--------------------------------------------------------MAIN--------------------------------------*/
 int main(){
 	int scelta=0;
