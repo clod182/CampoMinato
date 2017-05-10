@@ -3,6 +3,7 @@
 #include <math.h>
 #define MINA '*'
 #define VUOTO '0'
+#define SCOPMAIN 's'
 #define BANDIERINA '?'
 #define COPERTO 'X'
 #define SCOPERTO 'O'
@@ -220,20 +221,19 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 
 
 void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){
-	if(x>=0 && y>=0 && x<=c && y<=r){		
-		//printf("************************************************************************SONO IN\n");	
-		if(campo[y][x]!=VUOTO){//&&(campoHidden[y][x]!=SCOPERTO){
+	if((x>=0 && y>=0 && x<=c && y<r)&&(campoHidden[y][x]==COPERTO)){		
+		if(campo[y][x]!=VUOTO){
 			campoHidden[y][x]=campo[y][x];
 		}		
 		else{
-			campoHidden[y][x]=SCOPERTO;
+			campoHidden[y][x]=SCOPERTO;			
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
-			//scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x+1,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x,y+1,r,c);
+			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
 		}
 	}	
