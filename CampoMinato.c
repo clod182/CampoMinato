@@ -3,7 +3,6 @@
 #include <math.h>
 #define MINA '*'
 #define VUOTO '0'
-#define SCOPMAIN 's'
 #define BANDIERINA '?'
 #define COPERTO 'X'
 #define SCOPERTO 'O'
@@ -215,8 +214,7 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 			campo[ran1][ran2]=MINA;
 			contm++;
 		}
-	}
-	//return campo;
+	}	
 }
 
 
@@ -278,16 +276,62 @@ void marcaCella(char** campoHidden,int x, int y){
 	}
 }
 
+
+void checkVittoria(char** campoHidden,int mine, int r, int c,int* vittoria){
+	int i,j,tot4win,conta=0;
+	tot4win=(c*r)-mine;	
+	for(i=0;i<r;i++){
+		for(j=0;j<c;j++){
+			if((campoHidden[i][j]==SCOPERTO)||(campoHidden[i][j]>='1' && campoHidden[i][j]<='8')){
+				conta++;
+			}			
+		}
+	}
+	if(conta==tot4win){
+		*vittoria=1;
+		printf("Grande!Hai vinto :)\n");
+	}
+}
+
+
+void leggiRigheColonne(int* r,int* c){
+	FILE *f;	
+	f=fopen("partitaInput.txt","r"); /*apro il file*/
+	if( f==NULL ){
+    	perror("Errore in apertura del file");    
+  	}
+  	fscanf(f,"%d%*c%*c%d",r,c);  	
+  	fclose(f);
+}
+
+void leggiMine(char** campo){
+	int flag=0;
+	int y,x;
+	FILE *f;
+	char line[256];	
+	f=fopen("partitaInput.txt","r"); /*apro il file*/
+	if( f==NULL ){
+    	perror("Errore in apertura del file");    
+  	}
+  	while (fgets(line, sizeof(line), f)){
+	  if(flag>0){
+	  	fscanf(f,"%d%*c%*c%d",&y,&x);	  		
+  		campo[y][x]=MINA;  		
+	  }
+	  flag++;  				       
+    }
+    fclose(f);
+}
 /*--------------------------------------------------------MAIN--------------------------------------*/
 int main(){
-	int scelta=0;
+	int scelta=0;	
 	char** CampoMain;
 	char** CampoHidden;
 	printf("***---***CampoMinato***---***\n");
 	printf("Cosa vuoi fare?\n1 - Generare schema tramite input\n2 - Generare schema tramite file\n3 - Uscita\n");
 	scanf("%d",&scelta);
 	if (scelta==1){
-		int R,C,mine,X,Y,perso=0;
+		int R,C,mine,X,Y,perso=0,vittoria=0;		
 		do{
 			printf("Dammi la dimensione del campo ((R C) > 0)\n");
 			scanf("%d %d",&R, &C);
@@ -303,7 +347,7 @@ int main(){
 			scanf("%d",&mine);
 		}while(mine<=0 || mine>(R*C)-1);
 		inserisciMine(CampoMain,R,C,mine);
-		aggiungiNumeri(CampoMain,R,C);/*------------------------------------------------------*/
+		aggiungiNumeri(CampoMain,R,C);
 		stampaCampo(CampoMain,R,C);
 		stampaCampo(CampoHidden,R,C);
 		scelta=0;
@@ -314,6 +358,7 @@ int main(){
 				printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
 				scanf("%d %d",&Y, &X);
 				scopriCella(CampoMain,CampoHidden,R,C,X,Y,&perso);
+				checkVittoria(CampoHidden,mine,R,C,&vittoria);
 				if(perso==0){
 					stampaCampo(CampoMain,R,C);
 					stampaCampo(CampoHidden,R,C);
@@ -326,7 +371,20 @@ int main(){
 				stampaCampo(CampoMain,R,C);
 				stampaCampo(CampoHidden,R,C);
 			}
-		}while(perso==0);
+		}while(perso==0 && vittoria==0);		
+	}
+	else if(scelta==2){
+		int R,C,perso=0,vittoria=0;
+		leggiRigheColonne(&R,&C);				
+		printf("Ho creato,leggendo file,un campo di: \n-%d righe\n-%d colonne\n",R,C);
+		CampoMain=creaCampo(CampoMain,R,C);
+		CampoHidden=creaCampo(CampoHidden,R,C);
+		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
+		CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
+		leggiMine(CampoMain);
+		stampaCampo(CampoMain,R,C);
+		stampaCampo(CampoHidden,R,C);
+			
 	}
 	return 0;
 }
