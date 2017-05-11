@@ -322,6 +322,26 @@ void leggiMine(char** campo){
     }
     fclose(f);
 }
+
+
+void generaCampoOut(char** campo,int r,int c){
+	int i,j;
+	FILE *f;
+	f=fopen("capoSalvatoOut.txt","w");
+	if( f==NULL ){
+    	perror("Errore in apertura del file");    
+  	}
+  	fprintf(f,"%d, %d\n",r,c);
+  	fprintf(f,"\n");
+  	for(i=0;i<r;i++){
+		for(j=0;j<c;j++){
+			if(campo[i][j]==MINA){
+				fprintf(f,"%d, %d\n",i,j);
+			}			
+		}
+	}  	
+	fclose(f);
+}
 /*--------------------------------------------------------MAIN--------------------------------------*/
 int main(){
 	int scelta=0;	
@@ -384,6 +404,7 @@ int main(){
 		leggiMine(CampoMain);
 		stampaCampo(CampoMain,R,C);
 		stampaCampo(CampoHidden,R,C);
+		generaCampoOut(CampoMain,R,C);/*Prova */
 			
 	}
 	return 0;
