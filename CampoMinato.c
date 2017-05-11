@@ -304,7 +304,7 @@ void leggiRigheColonne(int* r,int* c){
   	fclose(f);
 }
 
-void leggiMine(char** campo){
+void leggiMine(char** campo,int* mine){
 	int flag=0;
 	int y,x;
 	FILE *f;
@@ -316,11 +316,24 @@ void leggiMine(char** campo){
   	while (fgets(line, sizeof(line), f)){
 	  if(flag>0){
 	  	fscanf(f,"%d%*c%*c%d",&y,&x);	  		
-  		campo[y][x]=MINA;  		
+  		campo[y][x]=MINA;		  		
 	  }
 	  flag++;  				       
-    }
+    }    
     fclose(f);
+}
+
+void contaMineLette(char** campo,int r,int c,int* mine){
+	int contam=0,i,j;
+	for(i=0;i<r;i++){
+		for(j=0;j<c;j++){
+			if(campo[i][j]==MINA){
+				contam++;
+			}			
+		}
+	}
+	*mine=contam;
+	printf("Ho letto dal file %d mine\n", *mine);
 }
 
 
@@ -341,38 +354,13 @@ void generaCampoOut(char** campo,int r,int c){
 		}
 	}  	
 	fclose(f);
+	printf("Ho salvato con successo lo stato del campo nel file --capoSalvatoOut.txt--\n");
 }
-/*--------------------------------------------------------MAIN--------------------------------------*/
-int main(){
-	int scelta=0;	
-	char** CampoMain;
-	char** CampoHidden;
-	printf("***---***CampoMinato***---***\n");
-	printf("Cosa vuoi fare?\n1 - Generare schema tramite input\n2 - Generare schema tramite file\n3 - Uscita\n");
-	scanf("%d",&scelta);
-	if (scelta==1){
-		int R,C,mine,X,Y,perso=0,vittoria=0;		
-		do{
-			printf("Dammi la dimensione del campo ((R C) > 0)\n");
-			scanf("%d %d",&R, &C);
-		}while((R<=0 || C<=0)||(R<=1 && C<=1));
-		CampoMain=creaCampo(CampoMain,R,C);
-		CampoHidden=creaCampo(CampoHidden,R,C);
-		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
-		CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
-		stampaCampo(CampoMain,R,C);
-		stampaCampo(CampoHidden,R,C);
-		do{
-			printf("Dammi il numero di mine che vuoi inserire (0<mine<dimensione campo -1[=%d])\n",(R*C)-1);
-			scanf("%d",&mine);
-		}while(mine<=0 || mine>(R*C)-1);
-		inserisciMine(CampoMain,R,C,mine);
-		aggiungiNumeri(CampoMain,R,C);
-		stampaCampo(CampoMain,R,C);
-		stampaCampo(CampoHidden,R,C);
-		scelta=0;
-		do{
-			printf("Ora cosa vuoi fare?\n1 - Scoprire una cella\n2 - Marcare o smarcare una cella\n3 - Terminare il gioco\n");
+
+void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int X, int Y,int mine,int* tornamenu){
+	int scelta=0;
+	do{
+			printf("Ora cosa vuoi fare?\n1 - Scoprire una cella\n2 - Marcare o smarcare una cella\n3 - Uscire e tornare al menu\n4 - Salvare lo stato del campo di gioco:\n");
 			scanf("%d",&scelta);
 			if(scelta==1){
 				printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
@@ -391,21 +379,67 @@ int main(){
 				stampaCampo(CampoMain,R,C);
 				stampaCampo(CampoHidden,R,C);
 			}
-		}while(perso==0 && vittoria==0);		
-	}
-	else if(scelta==2){
-		int R,C,perso=0,vittoria=0;
-		leggiRigheColonne(&R,&C);				
-		printf("Ho creato,leggendo file,un campo di: \n-%d righe\n-%d colonne\n",R,C);
-		CampoMain=creaCampo(CampoMain,R,C);
-		CampoHidden=creaCampo(CampoHidden,R,C);
-		CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
-		CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
-		leggiMine(CampoMain);
-		stampaCampo(CampoMain,R,C);
-		stampaCampo(CampoHidden,R,C);
-		generaCampoOut(CampoMain,R,C);/*Prova */
-			
-	}
+			else if(scelta==3){
+				*tornamenu=1;
+			}			
+			else if(scelta==4){
+				generaCampoOut(CampoMain,R,C);
+			}
+		}while(perso==0 && vittoria==0 && *tornamenu==0);		
+}
+/*--------------------------------------------------------MAIN--------------------------------------*/
+int main(){
+	int scelta=0,escigioco=0;	
+	char** CampoMain;
+	char** CampoHidden;
+	printf("***---***CampoMinato***---***\n");
+	int tornamenu=0;
+		do{
+			tornamenu=0;		
+			printf("Cosa vuoi fare?\n1 - Generare schema tramite input\n2 - Generare schema tramite file\n3 - Uscita\n");
+			scanf("%d",&scelta);	
+			if (scelta==1){		
+				int R,C,mine,X,Y,perso=0,vittoria=0;
+				do{
+					printf("Dammi la dimensione del campo ((R C) > 0)\n");
+					scanf("%d %d",&R, &C);
+				}while((R<=0 || C<=0)||(R<=1 && C<=1));
+				CampoMain=creaCampo(CampoMain,R,C);
+				CampoHidden=creaCampo(CampoHidden,R,C);
+				CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
+				CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
+				stampaCampo(CampoMain,R,C);
+				stampaCampo(CampoHidden,R,C);
+				do{
+					printf("Dammi il numero di mine che vuoi inserire (0<mine<dimensione campo -1[=%d])\n",(R*C)-1);
+					scanf("%d",&mine);
+				}while(mine<=0 || mine>(R*C)-1);
+				inserisciMine(CampoMain,R,C,mine);
+				aggiungiNumeri(CampoMain,R,C);
+				stampaCampo(CampoMain,R,C);
+				stampaCampo(CampoHidden,R,C);
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu);							
+			}			
+			else if(scelta==2){
+				int R,C,X,Y,mine,perso=0,vittoria=0;
+				leggiRigheColonne(&R,&C);				
+				printf("Ho creato,leggendo file,un campo di: \n-%d righe\n-%d colonne\n",R,C);
+				CampoMain=creaCampo(CampoMain,R,C);
+				CampoHidden=creaCampo(CampoHidden,R,C);
+				CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
+				CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
+				leggiMine(CampoMain,&mine);
+				contaMineLette(CampoMain,R,C,&mine);
+				aggiungiNumeri(CampoMain,R,C);
+				stampaCampo(CampoMain,R,C);
+				stampaCampo(CampoHidden,R,C);
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu);			
+			}
+			else if(scelta==3){
+				printf("Hai deciso di uscire dal gioco\n");
+				escigioco=1;				
+			}	
+		}while(tornamenu==1 && escigioco==0);
+	
 	return 0;
 }
