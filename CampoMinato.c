@@ -8,7 +8,7 @@
 #define SCOPERTO 'O'
 #define LINEAOUT "----->>>>>"
 
-char** creaCampo(char** campo,int r,int c){
+char** creaCampo(char** campo,int r,int c){ /*Creo il campo sotto forma di matrice*/
 	int i,j;
 	campo=(char**)malloc(r*sizeof(char*));
 	for(i=0;i<r;i++){
@@ -18,7 +18,7 @@ char** creaCampo(char** campo,int r,int c){
 }
 
 
-char** riempiCampo(char** campo,int r, int c, char carattere){
+char** riempiCampo(char** campo,int r, int c, char carattere){ /*Funzione per riempire il campo di gioco con un certo carattere*/
 	int i,j;
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
@@ -29,7 +29,7 @@ char** riempiCampo(char** campo,int r, int c, char carattere){
 }
 
 
-void aggiungiNumeri(char** campo,int r, int c){
+void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel campo di gioco il numero delle mine adiacenti*/
 	int i,j,k,kk;
 	char conta='0';
 	for(i=0;i<r;i++){
@@ -166,7 +166,7 @@ void aggiungiNumeri(char** campo,int r, int c){
 }
 
 
-void stampaCampo(char** campo,int r,int c){
+void stampaCampo(char** campo,int r,int c){ /*Funzione per stampare il campo*/
 	int i,j;
 	printf("-----Il campo e questo-----\n");
 	/*for(i=0;i<r;i++){
@@ -193,7 +193,7 @@ void stampaCampo(char** campo,int r,int c){
 }
 
 
-void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera piu efficiente?*/
+void inserisciMine(char** campo,int r,int c,int m){ /*Inserisco le mine in maniera randomica nel campo*/
 	int i,j,ran1,ran2,contm;
 	srand(time(NULL));
 	/*for(i=0;i<r && contm<=m;i++){
@@ -218,7 +218,7 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Da implemetare in maniera 
 }
 
 
-void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){
+void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){ /*Funzione cje scopre tutte le celle vuote adiacenti alla cella vuota selezionata*/
 	if((x>=0 && y>=0 && x<=c && y<r)&&(campoHidden[y][x]==COPERTO)){		
 		if(campo[y][x]!=VUOTO){
 			campoHidden[y][x]=campo[y][x];
@@ -237,7 +237,7 @@ void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int
 	}	
 }
 
-void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){
+void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){ /*Funzione che gestisce lo scoprimento di una cella*/
 	if(campoHidden[y-1][x-1]==BANDIERINA){
 		printf("La cella che hai selezionato e MARCATA, devi prima SMARCARLA se vuoi scoprirla!\n");
 	}
@@ -262,7 +262,7 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 }
 
 
-void marcaCella(char** campoHidden,int x, int y){
+void marcaCella(char** campoHidden,int x, int y){/*Funzione per marcare e smarcare una cella*/
 	if(campoHidden[y-1][x-1]==COPERTO){
 		campoHidden[y-1][x-1]=BANDIERINA;
 		printf("Hai MARCATO correttamente la casella in posizione[%d,%d]\n",y,x);
