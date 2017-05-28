@@ -1,0 +1,1 @@
+compilare con : gcc -std=gnu89 -Wall -pedantic -o CampoMinato CampoMinato.c

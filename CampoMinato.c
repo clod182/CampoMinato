@@ -1,6 +1,8 @@
+/*Manesso Claudio, Fortin Luca*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #define MINA '*'
 #define VUOTO '0'
 #define BANDIERINA '?'
@@ -9,7 +11,7 @@
 #define LINEAOUT "----->>>>>"
 
 char** creaCampo(char** campo,int r,int c){ /*Creo il campo sotto forma di matrice*/
-	int i,j;
+	int i;
 	campo=(char**)malloc(r*sizeof(char*));
 	for(i=0;i<r;i++){
 		campo[i]=(char*)malloc(c*sizeof(char));
@@ -40,26 +42,26 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 					for(k=0;k<2;k++){
 						for(kk=0;kk<2;kk++){
 							if(campo[k][kk]==MINA){
-								conta++;						
-							}	
+								conta++;
+							}
 						}
-					}				
-					if(conta!='0'){
-							campo[i][j]=conta;					
 					}
-				}				
+					if(conta!='0'){
+							campo[i][j]=conta;
+					}
+				}
 			}
 			else if(i==r-1 && j==c-1){ /*Gestisco il caso particolare della cella sud-est*/
 				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
 					for(k=r-1;k>r-3;k--){
 						for(kk=c-1;kk>c-3;kk--){
 							if(campo[k][kk]==MINA){
-								conta++;						
-							}	
+								conta++;
+							}
 						}
-					}				
+					}
 					if(conta!='0'){
-							campo[i][j]=conta;					
+							campo[i][j]=conta;
 					}
 				}
 			}
@@ -68,12 +70,12 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 					for(k=0;k<2;k++){
 						for(kk=c-1;kk>c-3;kk--){
 							if(campo[k][kk]==MINA){
-								conta++;						
-							}	
+								conta++;
+							}
 						}
-					}				
+					}
 					if(conta!='0'){
-							campo[i][j]=conta;					
+							campo[i][j]=conta;
 					}
 				}
 			}
@@ -82,12 +84,12 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 					for(k=r-1;k>r-3;k--){
 						for(kk=0;kk<2;kk++){
 							if(campo[k][kk]==MINA){
-								conta++;						
-							}	
+								conta++;
+							}
 						}
-					}				
+					}
 					if(conta!='0'){
-							campo[i][j]=conta;					
+							campo[i][j]=conta;
 					}
 				}
 			}
@@ -101,7 +103,7 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 						}
 					}
 					if(conta!='0'){
-						campo[i][j]=conta;					
+						campo[i][j]=conta;
 					}
 				}
 			}
@@ -115,7 +117,7 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 						}
 					}
 					if(conta!='0'){
-						campo[i][j]=conta;					
+						campo[i][j]=conta;
 					}
 				}
 			}
@@ -129,7 +131,7 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 						}
 					}
 					if(conta!='0'){
-						campo[i][j]=conta;					
+						campo[i][j]=conta;
 					}
 				}
 			}
@@ -143,10 +145,10 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 						}
 					}
 					if(conta!='0'){
-						campo[i][j]=conta;					
+						campo[i][j]=conta;
 					}
 				}
-			}			
+			}
 			else{ /*Gestisco tutti gli altri casi (tutta la parte della matrice senza i bordi)*/
 				if(campo[i][j]!=MINA && campo[i][j]==VUOTO){
 					for(k=(i-1);k<(i+2);k++){
@@ -157,10 +159,10 @@ void aggiungiNumeri(char** campo,int r, int c){ /*Funzione che inseriesce nel ca
 						}
 					}
 					if(conta!='0'){
-						campo[i][j]=conta;					
+						campo[i][j]=conta;
 					}
 				}
-			}			
+			}
 		}
 	}
 }
@@ -180,7 +182,7 @@ void stampaCampo(char** campo,int r,int c){ /*Funzione per stampare il campo*/
 	}
 	printf("\n");
 	for(j=0;j<c;j++){
-		printf("-  ",j+1);
+		printf("-  ");
 	}
 	printf("\n\n");
     for(i=0;i<r;i++){
@@ -194,7 +196,7 @@ void stampaCampo(char** campo,int r,int c){ /*Funzione per stampare il campo*/
 
 
 void inserisciMine(char** campo,int r,int c,int m){ /*Inserisco le mine in maniera randomica nel campo*/
-	int i,j,ran1,ran2,contm;
+	int ran1,ran2,contm;
 	srand(time(NULL));
 	/*for(i=0;i<r && contm<=m;i++){
 		for(j=0;j<c && contm<=m;j++){
@@ -214,17 +216,17 @@ void inserisciMine(char** campo,int r,int c,int m){ /*Inserisco le mine in manie
 			campo[ran1][ran2]=MINA;
 			contm++;
 		}
-	}	
+	}
 }
 
 
 void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int c){ /*Funzione cje scopre tutte le celle vuote adiacenti alla cella vuota selezionata*/
-	if((x>=0 && y>=0 && x<=c && y<r)&&(campoHidden[y][x]==COPERTO)){		
+	if((x>=0 && y>=0 && x<=c && y<r)&&(campoHidden[y][x]==COPERTO)){
 		if(campo[y][x]!=VUOTO){
 			campoHidden[y][x]=campo[y][x];
-		}		
+		}
 		else{
-			campoHidden[y][x]=SCOPERTO;			
+			campoHidden[y][x]=SCOPERTO;
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x,y-1,r,c);
@@ -234,7 +236,7 @@ void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y+1,r,c);
 			scopriCelleAdiacenti(campo,campoHidden,x+1,y-1,r,c);
 		}
-	}	
+	}
 }
 
 void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){ /*Funzione che gestisce lo scoprimento di una cella*/
@@ -245,20 +247,20 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 		printf("La cella che hai selezionato e gia scoperta ;)\n");
 	}
 	else{
-		if(campo[y-1][x-1]==MINA){			
+		if(campo[y-1][x-1]==MINA){
 			printf("Hai preso una mina \n");
-			*loose=1;					
+			stampaCampo(campo,r,c);
+			*loose=1;
 		}
 		else if((campo[y-1][x-1]>='1')&&(campo[y-1][x-1]<='8')){
 			campoHidden[y-1][x-1]=campo[y-1][x-1];
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
-		else{			
-			//campoHidden[y-1][x-1]=SCOPERTO;
+		else{
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
-	}	
+	}
 }
 
 
@@ -279,12 +281,12 @@ void marcaCella(char** campoHidden,int x, int y){/*Funzione per marcare e smarca
 
 void checkVittoria(char** campoHidden,int mine, int r, int c,int* vittoria){
 	int i,j,tot4win,conta=0;
-	tot4win=(c*r)-mine;	
+	tot4win=(c*r)-mine;
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
 			if((campoHidden[i][j]==SCOPERTO)||(campoHidden[i][j]>='1' && campoHidden[i][j]<='8')){
 				conta++;
-			}			
+			}
 		}
 	}
 	if(conta==tot4win){
@@ -295,12 +297,12 @@ void checkVittoria(char** campoHidden,int mine, int r, int c,int* vittoria){
 
 
 void leggiRigheColonne(int* r,int* c){
-	FILE *f;	
+	FILE *f;
 	f=fopen("partitaInput.txt","r"); /*apro il file*/
 	if( f==NULL ){
-    	perror("Errore in apertura del file");    
+    	perror("Errore in apertura del file");
   	}
-  	fscanf(f,"%d%*c%*c%d",r,c);  	
+  	fscanf(f,"%d%*c%*c%d",r,c);
   	fclose(f);
 }
 
@@ -308,18 +310,18 @@ void leggiMine(char** campo,int* mine){
 	int flag=0;
 	int y,x;
 	FILE *f;
-	char line[256];	
+	char line[256];
 	f=fopen("partitaInput.txt","r"); /*apro il file*/
 	if( f==NULL ){
-    	perror("Errore in apertura del file");    
+    	perror("Errore in apertura del file");
   	}
   	while (fgets(line, sizeof(line), f)){
 	  if(flag>0){
-	  	fscanf(f,"%d%*c%*c%d",&y,&x);	  		
-  		campo[y][x]=MINA;		  		
+	  	fscanf(f,"%d%*c%*c%d",&y,&x);
+  		campo[y][x]=MINA;
 	  }
-	  flag++;  				       
-    }    
+	  flag++;
+    }
     fclose(f);
 }
 
@@ -329,7 +331,7 @@ void contaMineLette(char** campo,int r,int c,int* mine){
 		for(j=0;j<c;j++){
 			if(campo[i][j]==MINA){
 				contam++;
-			}			
+			}
 		}
 	}
 	*mine=contam;
@@ -342,7 +344,7 @@ void generaCampoOut(char** campo,int r,int c){
 	FILE *f;
 	f=fopen("capoSalvatoOut.txt","w");
 	if( f==NULL ){
-    	perror("Errore in apertura del file");    
+    	perror("Errore in apertura del file");
   	}
   	fprintf(f,"%d, %d\n",r,c);
   	fprintf(f,"\n");
@@ -350,102 +352,85 @@ void generaCampoOut(char** campo,int r,int c){
 		for(j=0;j<c;j++){
 			if(campo[i][j]==MINA){
 				fprintf(f,"%d, %d\n",i,j);
-			}			
+			}
 		}
-	}  	
+	}
 	fclose(f);
 	printf("Ho salvato con successo lo stato del campo nel file --capoSalvatoOut.txt--\n");
 }
 
-struct listacam{
+/*struct listacam{
 	char** campo;
 	int nmossa;
 	struct listacam *next;
 };
 typedef struct listacam *ListaCam;
 
-ListaCam salvaStato(char** campoAtm,ListaCam *stato,int *nmosse){
+ListaCam salvaStato(char** campoAtm,ListaCam stato,int R,int C,int *nmosse){
 	ListaCam testa =(ListaCam) malloc(sizeof(struct listacam));
 	if(testa){
 		testa->campo=campoAtm;
-		testa->next=*stato;
+		testa->next=stato;
 		testa->nmossa=*nmosse;
-		*stato=testa;
-		return testa;
+		stato=testa;
+		return stato;
 	}
 	else{
 		printf("Erorre malloc stati\n");
 		return NULL;
 	}
-}
-
-ListaCam getStato(ListaCam stato,int *nmosse){
-	while(stato){
-		if(stato->nmossa==(*nmosse)-1)
-			return stato->campo;
-		stato=stato->next;
-	}	
-}
+}*/
 
 
-void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int X, int Y,int mine,int* tornamenu, ListaCam* lista,int* mosse){
+
+
+void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int mine,int* tornamenu){
 	int scelta=0;
+	int X,Y;
 	do{
 			printf("Ora cosa vuoi fare?\n1 - Scoprire una cella\n2 - Marcare o smarcare una cella\n3 - Uscire e tornare al menu\n4 - Salvare lo stato del campo di gioco:\n");
 			scanf("%d",&scelta);
 			if(scelta==1){
-				printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
-				scanf("%d %d",&Y, &X);
+				do{
+					printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
+					scanf("%d %d",&Y, &X);
+				}while(Y>R || X>C);
 				scopriCella(CampoMain,CampoHidden,R,C,X,Y,&perso);
-				*lista=salvaStato(CampoHidden,*lista,mosse);
-				*mosse++;
 				checkVittoria(CampoHidden,mine,R,C,&vittoria);
-				if(perso==0){					
-					stampaCampo(CampoMain,R,C);
+				if(perso==0){
+					/*stampaCampo(CampoMain,R,C);*/
 					stampaCampo(CampoHidden,R,C);
-				}
-				else if(perso==1){
-					int sscelta=0;
-					printf("Avresti perso,vuoi tornare indietro dell'ultima mossa? (s=1,n=2)' \n");
-					scanf("%d" ,&sscelta);
-					if(sscelta==1){
-						perso=0;
-						CampoHidden=getStato(*lista,mosse);
-						*mosse=*mosse-1;
-					}
-					
 				}
 			}
 			else if(scelta==2){
 				printf("Dammi le coordinate della cella che intendi marcare, o se gia marcata, smarcare (PRIMA riga POI colonna)\n");
 				scanf("%d %d",&Y, &X);
 				marcaCella(CampoHidden,X,Y);
-				stampaCampo(CampoMain,R,C);
+				/*stampaCampo(CampoMain,R,C);*/
 				stampaCampo(CampoHidden,R,C);
 			}
 			else if(scelta==3){
 				*tornamenu=1;
-			}			
+			}
 			else if(scelta==4){
 				generaCampoOut(CampoMain,R,C);
 			}
-		}while(perso==0 && vittoria==0 && *tornamenu==0);		
+		}while(perso==0 && vittoria==0 && *tornamenu==0);
 }
 /*--------------------------------------------------------MAIN--------------------------------------*/
 int main(){
-	int scelta=0,escigioco=0;	
+	int scelta=0,escigioco=0;
 	char** CampoMain;
 	char** CampoHidden;
-	ListaCam listaMain;
-	int nmossemain=0;
-	printf("***---***CampoMinato***---***\n");
 	int tornamenu=0;
+	printf("***---***CampoMinato***---***\n");
+
 		do{
-			tornamenu=0;		
+			tornamenu=0;
 			printf("Cosa vuoi fare?\n1 - Generare schema tramite input\n2 - Generare schema tramite file\n3 - Uscita\n");
-			scanf("%d",&scelta);	
-			if (scelta==1){		
-				int R,C,mine,X,Y,perso=0,vittoria=0;
+			scanf("%d",&scelta);
+			if (scelta==1){
+				int R,C,mine,perso=0,vittoria=0;
 				do{
 					printf("Dammi la dimensione del campo ((R C) > 0)\n");
 					scanf("%d %d",&R, &C);
@@ -454,7 +439,7 @@ int main(){
 				CampoHidden=creaCampo(CampoHidden,R,C);
 				CampoMain=riempiCampo(CampoMain,R,C,VUOTO);
 				CampoHidden=riempiCampo(CampoHidden,R,C,COPERTO);
-				stampaCampo(CampoMain,R,C);
+				/*stampaCampo(CampoMain,R,C);*/
 				stampaCampo(CampoHidden,R,C);
 				do{
 					printf("Dammi il numero di mine che vuoi inserire (0<mine<dimensione campo -1[=%d])\n",(R*C)-1);
@@ -462,13 +447,13 @@ int main(){
 				}while(mine<=0 || mine>(R*C)-1);
 				inserisciMine(CampoMain,R,C,mine);
 				aggiungiNumeri(CampoMain,R,C);
-				stampaCampo(CampoMain,R,C);
+				/*stampaCampo(CampoMain,R,C);*/
 				stampaCampo(CampoHidden,R,C);
-				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu,&listaMain,&nmossemain);							
-			}			
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,mine,&tornamenu);
+			}
 			else if(scelta==2){
-				int R,C,X,Y,mine,perso=0,vittoria=0;
-				leggiRigheColonne(&R,&C);				
+				int R,C,mine,perso=0,vittoria=0;
+				leggiRigheColonne(&R,&C);
 				printf("Ho creato,leggendo file,un campo di: \n-%d righe\n-%d colonne\n",R,C);
 				CampoMain=creaCampo(CampoMain,R,C);
 				CampoHidden=creaCampo(CampoHidden,R,C);
@@ -477,15 +462,15 @@ int main(){
 				leggiMine(CampoMain,&mine);
 				contaMineLette(CampoMain,R,C,&mine);
 				aggiungiNumeri(CampoMain,R,C);
-				stampaCampo(CampoMain,R,C);
+				/*stampaCampo(CampoMain,R,C);*/
 				stampaCampo(CampoHidden,R,C);
-				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu,&listaMain,&nmossemain);			
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,mine,&tornamenu);
 			}
 			else if(scelta==3){
 				printf("Hai deciso di uscire dal gioco\n");
-				escigioco=1;				
-			}	
+				escigioco=1;
+			}
 		}while(tornamenu==1 && escigioco==0);
-	
+
 	return 0;
 }
