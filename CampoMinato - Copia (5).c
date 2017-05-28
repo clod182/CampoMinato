@@ -245,9 +245,9 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 		printf("La cella che hai selezionato e gia scoperta ;)\n");
 	}
 	else{
-		if(campo[y-1][x-1]==MINA){			
-			printf("Hai preso una mina \n");
-			*loose=1;					
+		if(campo[y-1][x-1]==MINA){
+			printf("Hai preso una mina stupido\n");
+			*loose=1;
 		}
 		else if((campo[y-1][x-1]>='1')&&(campo[y-1][x-1]<='8')){
 			campoHidden[y-1][x-1]=campo[y-1][x-1];
@@ -364,14 +364,14 @@ struct listacam{
 };
 typedef struct listacam *ListaCam;
 
-ListaCam salvaStato(char** campoAtm,ListaCam *stato,int *nmosse){
+ListaCam salvaStato(char** campoAtm,ListaCam stato,int R,int C,int *nmosse){
 	ListaCam testa =(ListaCam) malloc(sizeof(struct listacam));
 	if(testa){
 		testa->campo=campoAtm;
-		testa->next=*stato;
+		testa->next=stato;
 		testa->nmossa=*nmosse;
-		*stato=testa;
-		return testa;
+		stato=testa;
+		return stato;
 	}
 	else{
 		printf("Erorre malloc stati\n");
@@ -379,16 +379,10 @@ ListaCam salvaStato(char** campoAtm,ListaCam *stato,int *nmosse){
 	}
 }
 
-ListaCam getStato(ListaCam stato,int *nmosse){
-	while(stato){
-		if(stato->nmossa==(*nmosse)-1)
-			return stato->campo;
-		stato=stato->next;
-	}	
-}
 
 
-void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int X, int Y,int mine,int* tornamenu, ListaCam* lista,int* mosse){
+
+void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int X, int Y,int mine,int* tornamenu){
 	int scelta=0;
 	do{
 			printf("Ora cosa vuoi fare?\n1 - Scoprire una cella\n2 - Marcare o smarcare una cella\n3 - Uscire e tornare al menu\n4 - Salvare lo stato del campo di gioco:\n");
@@ -397,23 +391,11 @@ void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int 
 				printf("Dammi le coordinate della cella che intendi scoprire (PRIMA riga POI colonna)\n");
 				scanf("%d %d",&Y, &X);
 				scopriCella(CampoMain,CampoHidden,R,C,X,Y,&perso);
-				*lista=salvaStato(CampoHidden,*lista,mosse);
-				*mosse++;
+				
 				checkVittoria(CampoHidden,mine,R,C,&vittoria);
-				if(perso==0){					
+				if(perso==0){
 					stampaCampo(CampoMain,R,C);
 					stampaCampo(CampoHidden,R,C);
-				}
-				else if(perso==1){
-					int sscelta=0;
-					printf("Avresti perso,vuoi tornare indietro dell'ultima mossa? (s=1,n=2)' \n");
-					scanf("%d" ,&sscelta);
-					if(sscelta==1){
-						perso=0;
-						CampoHidden=getStato(*lista,mosse);
-						*mosse=*mosse-1;
-					}
-					
 				}
 			}
 			else if(scelta==2){
@@ -464,7 +446,7 @@ int main(){
 				aggiungiNumeri(CampoMain,R,C);
 				stampaCampo(CampoMain,R,C);
 				stampaCampo(CampoHidden,R,C);
-				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu,&listaMain,&nmossemain);							
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu);							
 			}			
 			else if(scelta==2){
 				int R,C,X,Y,mine,perso=0,vittoria=0;
@@ -479,7 +461,7 @@ int main(){
 				aggiungiNumeri(CampoMain,R,C);
 				stampaCampo(CampoMain,R,C);
 				stampaCampo(CampoHidden,R,C);
-				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu,&listaMain,&nmossemain);			
+				turnoPlayer(CampoMain,CampoHidden,R,C,perso,vittoria,X,Y,mine,&tornamenu);			
 			}
 			else if(scelta==3){
 				printf("Hai deciso di uscire dal gioco\n");
