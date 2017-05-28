@@ -239,7 +239,7 @@ void scopriCelleAdiacenti(char** campo,char** campoHidden,int x,int y,int r, int
 	}
 }
 
-void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){ /*Funzione che gestisce lo scoprimento di una cella*/
+void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* loose){ /*Funzione che gestisce lo scoprimento di una cella, */
 	if(campoHidden[y-1][x-1]==BANDIERINA){
 		printf("La cella che hai selezionato e MARCATA, devi prima SMARCARLA se vuoi scoprirla!\n");
 	}
@@ -256,7 +256,7 @@ void scopriCella(char** campo, char** campoHidden,int r,int c,int x,int y,int* l
 			campoHidden[y-1][x-1]=campo[y-1][x-1];
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
-		else{
+		else{/*i casi in cui andare a scoprite tutte le celle adiacenti*/
 			scopriCelleAdiacenti(campo,campoHidden,x-1,y-1,r,c);
 			printf("Hai scoperto con successo la casella in posizione[%d,%d]\n",y, x);
 		}
@@ -325,7 +325,7 @@ void leggiMine(char** campo,int* mine){
     fclose(f);
 }
 
-void contaMineLette(char** campo,int r,int c,int* mine){
+void contaMineLette(char** campo,int r,int c,int* mine){/*contiaamo le mine lette lette dal file per le funzioni in cui ci servira*/
 	int contam=0,i,j;
 	for(i=0;i<r;i++){
 		for(j=0;j<c;j++){
@@ -339,7 +339,7 @@ void contaMineLette(char** campo,int r,int c,int* mine){
 }
 
 
-void generaCampoOut(char** campo,int r,int c){
+void generaCampoOut(char** campo,int r,int c){ /*Generiamo il campo salvato nel file txt*/
 	int i,j;
 	FILE *f;
 	f=fopen("capoSalvatoOut.txt","w");
@@ -359,32 +359,44 @@ void generaCampoOut(char** campo,int r,int c){
 	printf("Ho salvato con successo lo stato del campo nel file --capoSalvatoOut.txt--\n");
 }
 
-/*struct listacam{
+/*
+-----------------La nostra soluzione per tornare indietro di n mosse prevedeva la creazione di una lista in cui salvare i vari stadi del campo di gioco e poi al momento del bisogno
+scorrere la lista a seconda del n mosse di ripistino richieste e quindi riportare il campo in quello stato ma non siamo riusciti ad implementare correttamente il codice per questa parte
+------------------------------
+struct listacam{
 	char** campo;
 	int nmossa;
 	struct listacam *next;
 };
 typedef struct listacam *ListaCam;
 
-ListaCam salvaStato(char** campoAtm,ListaCam stato,int R,int C,int *nmosse){
+ListaCam salvaStato(char** campoAtm,ListaCam *stato,int *nmosse){
 	ListaCam testa =(ListaCam) malloc(sizeof(struct listacam));
 	if(testa){
 		testa->campo=campoAtm;
-		testa->next=stato;
+		testa->next=*stato;
 		testa->nmossa=*nmosse;
-		stato=testa;
-		return stato;
+		*stato=testa;
+		return testa;
 	}
 	else{
 		printf("Erorre malloc stati\n");
 		return NULL;
 	}
+}
+
+ListaCam getStato(ListaCam stato,int *nmosse){
+	while(stato){
+		if(stato->nmossa==(*nmosse)-1)
+			return stato->campo;
+		stato=stato->next;
+	}	
 }*/
 
 
 
 
-void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int mine,int* tornamenu){
+void turnoPlayer(char** CampoMain,char** CampoHidden,int R,int C,int perso, int vittoria,int mine,int* tornamenu){ /*In questa funzione gestiamo il turno del giocatorel la abbiamo divisa dal main perchè servendoci due volte questo pezzo di codice il programma risulta piu leggibile facendola come una funzione da poi richiamare nel main*/
 	int scelta=0;
 	int X,Y;
 	do{
